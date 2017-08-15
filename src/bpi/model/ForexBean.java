@@ -1,6 +1,14 @@
 package bpi.model;
 
-public class ForexBean {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import bpi.util.SQLCommand;
+
+public class ForexBean implements SQLCommand{
 	//input values
 	private int pesoAmount;
 	private String currencyType;
@@ -55,7 +63,57 @@ public class ForexBean {
 		
 		}
 	}
+	//SQL Operations
+	private Connection getConnection(){
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			connection = DriverManager
+					.getConnection("jdbc:mysql://localhost:3306/ticzon-entjav2-se31-db","root","");
+	}catch(ClassNotFoundException cnfe){
+		System.err.println("Class not found: "+cnfe.getMessage());
+	}catch(SQLException sqle){
+		System.err.println("SQL Exception "+ sqle.getMessage());
+	}
+		return connection;
+	}
 	
+	public void insertRecord(){
+		Connection connection = getConnection();
+		 if(connection !=null){
+			 try{
+				
+				 
+				 PreparedStatement pstmnt = connection.prepareStatement(INSERT_REC);
+				 pstmnt.setInt(1, this.pesoAmount);
+				 pstmnt.setString(2, this.currencyType);
+				 pstmnt.setDouble(3, this.result);
+				 pstmnt.setString(4, this.message);
+				 
+				 pstmnt.executeUpdate();
+			 }catch(SQLException sqle){
+				 throw new RuntimeException();
+			 }
+		 }
+	}
 	
+	public ResultSet getAllRecords(){
+		ResultSet records = null;
+		Connection connection = getConnection();
+		 if(connection !=null){
+			 try{
+				
+				 
+				 PreparedStatement pstmnt = connection.prepareStatement(GET_ALL_RECORDS);
+				 
+				 
+				records = pstmnt.executeQuery();
+			 }catch(SQLException sqle){
+				 throw new RuntimeException();
+			 }
+		 }
+		 return records;
+	}
 	
 }

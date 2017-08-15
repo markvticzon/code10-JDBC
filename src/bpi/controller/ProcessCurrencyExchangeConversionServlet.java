@@ -20,20 +20,7 @@ import java.sql.*;
 public class ProcessCurrencyExchangeConversionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	Connection connection = null;
-	
-	public void init() throws ServletException{
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			connection = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/ticzon-entjav2-se31-db","root","");
-	}catch(ClassNotFoundException cnfe){
-		System.err.println("Class not found: "+cnfe.getMessage());
-	}catch(SQLException sqle){
-		System.err.println("SQL Exception "+ sqle.getMessage());
-	}
-	}
+
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -70,26 +57,11 @@ public class ProcessCurrencyExchangeConversionServlet extends HttpServlet {
 			forex.setPesoAmount(pesoAmount);
 			forex.setCurrencyType(currencyType);
 			forex.compute();
-			
+			forex.insertRecord();
 			//step 4 - perform binding name is forex on forex as object
 			 request.setAttribute("forex", forex);
 			 
-			 if(connection !=null){
-				 try{
-					 String url = "Insert into forex (pesoAmount, currencyType, "
-					 		+ "result, message) values(?,?,?,?)";
-					 
-					 PreparedStatement pstmnt = connection.prepareStatement(url);
-					 pstmnt.setInt(1, forex.getPesoAmount());
-					 pstmnt.setString(2, forex.getCurrencyType());
-					 pstmnt.setDouble(3, forex.getResult());
-					 pstmnt.setString(4, forex.getMessage());
-					 
-					 pstmnt.executeUpdate();
-				 }catch(SQLException sqle){
-					 throw new RuntimeException();
-				 }
-			 }
+		
 			
 		} else {
 			throw new RuntimeException();

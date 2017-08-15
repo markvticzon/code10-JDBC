@@ -17,11 +17,17 @@
 		<jsp:getProperty name="forex" property="message" />
 	</b></p> 
 	
+	<form action = "getallrecords.html">
+
+		<input type="submit" value="View All Records"/>
+	</form>&nbsp;&nbsp;
+	
 	<!-- create a form that once the submit button is selected,
 	it goes back to the form -->
 	<form action="index.jsp">
 		<input type="submit" value="<< GO BACK >>"/>
 	</form>
+	
 	
 	<%@ include file="design/footer.jsp"%>
 </body>
