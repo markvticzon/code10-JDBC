@@ -64,13 +64,14 @@ public class ForexBean implements SQLCommand{
 		}
 	}
 	//SQL Operations
-	private Connection getConnection(){
+	public Connection getConnection(String jdbcUrl,
+			String dbUserName, String dbPassword){
 		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			connection = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/ticzon-entjav2-se31-db","root","");
+					.getConnection(jdbcUrl, dbUserName, dbPassword);
 	}catch(ClassNotFoundException cnfe){
 		System.err.println("Class not found: "+cnfe.getMessage());
 	}catch(SQLException sqle){
@@ -79,8 +80,8 @@ public class ForexBean implements SQLCommand{
 		return connection;
 	}
 	
-	public void insertRecord(){
-		Connection connection = getConnection();
+	public void insertRecord(Connection connection){
+		
 		 if(connection !=null){
 			 try{
 				
@@ -98,9 +99,9 @@ public class ForexBean implements SQLCommand{
 		 }
 	}
 	
-	public ResultSet getAllRecords(){
+	public ResultSet getAllRecords(Connection connection){
 		ResultSet records = null;
-		Connection connection = getConnection();
+		
 		 if(connection !=null){
 			 try{
 				

@@ -3,6 +3,8 @@ package bpi.controller;
 import java.io.IOException;
 
 
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,12 +15,25 @@ import bpi.model.ForexBean;
 
 import java.sql.*;
 
-/**
- * Servlet implementation class ProcessCurrencyExchangeConversionServlet
- */
-@WebServlet("/precesscurrencyexchange.html")
+
+
 public class ProcessCurrencyExchangeConversionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	Connection connection = null;
+	String jdbcUrl = null;
+	String dbUsername = null;
+	String dbPassword = null;
+	
+	public void init(ServletConfig config)throws ServletException{
+		super.init(config);
+		
+		jdbcUrl = config.getInitParameter("jdbcUrl");
+		dbUsername = config.getInitParameter("dbUsername");
+		dbPassword = config.getInitParameter("dbPassword");
+		
+		connection = new ForexBean().getConnection(jdbcUrl, dbUsername, dbPassword);
+	}
+	
 	
 
 	
@@ -57,7 +72,7 @@ public class ProcessCurrencyExchangeConversionServlet extends HttpServlet {
 			forex.setPesoAmount(pesoAmount);
 			forex.setCurrencyType(currencyType);
 			forex.compute();
-			forex.insertRecord();
+			forex.insertRecord(connection);
 			//step 4 - perform binding name is forex on forex as object
 			 request.setAttribute("forex", forex);
 			 

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import bpi.model.ForexBean;
 
-@WebServlet("/getallrecords.html")
+
 public class ProcessGetAllRecordsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -17,8 +17,14 @@ public class ProcessGetAllRecordsServlet extends HttpServlet {
 		doPost(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Connection connection = new ForexBean().getConnection(
+				getServletConfig().getInitParameter("jdbcUrl"),
+				getServletConfig().getInitParameter("dbUsername"),
+				getServletConfig().getInitParameter("dbPassword"));
+		
+		
 		ResultSet records =
-				new ForexBean().getAllRecords();
+				new ForexBean().getAllRecords(connection);
 		
 		
 		//perform binding
